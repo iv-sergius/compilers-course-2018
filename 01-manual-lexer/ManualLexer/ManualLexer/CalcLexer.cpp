@@ -56,7 +56,7 @@ Token CalcLexer::Read()
 	switch (next)
 	{
 	case '+':
-		return Token{ TT_END };
+		return Token{ TT_PLUS };
 	default:
 		break;
 	}

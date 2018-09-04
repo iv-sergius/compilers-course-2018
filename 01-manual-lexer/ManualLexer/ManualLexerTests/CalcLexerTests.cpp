@@ -71,12 +71,27 @@ TEST_CASE("Can parse one number", "[CalcLexer]") {
 }
 
 TEST_CASE("Can parse one operator", "[CalcLexer]") {
-	REQUIRE(Tokenize("9876543210"sv) == TokenList{
-		Token{ TT_NUMBER, "9876543210"s },
+	REQUIRE(Tokenize("+"sv) == TokenList{
+		Token{ TT_PLUS },
 		});
 }
 
-#if 0
+#if 0 // whitespace support
+// TODO: this test should pass OK.
+TEST_CASE("Can parse one operator after whitespace", "[CalcLexer]") {
+	REQUIRE(Tokenize("  +"sv) == TokenList{
+		Token{ TT_PLUS },
+		});
+	REQUIRE(Tokenize("\t+"sv) == TokenList{
+		Token{ TT_PLUS },
+		});
+	REQUIRE(Tokenize("   \t\t+"sv) == TokenList{
+		Token{ TT_PLUS },
+		});
+}
+#endif
+
+#if 0 // extended numbers support
 // TODO: this test should pass OK.
 TEST_CASE("Cannot read number which starts with zero") {
 	REQUIRE(Tokenize("0123456789"sv) == TokenList{
