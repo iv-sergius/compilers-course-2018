@@ -58,7 +58,7 @@ TokenList Tokenize(string_view text)
 
 }
 
-TEST_CASE("Can parse one number", "[CalcLexer]") {
+TEST_CASE("Can read one number", "[CalcLexer]") {
 	REQUIRE(Tokenize("0"sv) == TokenList{
 		Token{ TT_NUMBER, "0"s },
 		});
@@ -70,15 +70,25 @@ TEST_CASE("Can parse one number", "[CalcLexer]") {
 		});
 }
 
-TEST_CASE("Can parse one operator", "[CalcLexer]") {
+TEST_CASE("Can read one operator", "[CalcLexer]") {
 	REQUIRE(Tokenize("+"sv) == TokenList{
 		Token{ TT_PLUS },
 		});
 }
 
+TEST_CASE("Can read expression tokens", "[CalcLexer]") {
+	REQUIRE(Tokenize("45+9+28"sv) == TokenList{
+		Token{ TT_NUMBER, "45"s },
+		Token{ TT_PLUS },
+		Token{ TT_NUMBER, "9"s },
+		Token{ TT_PLUS },
+		Token{ TT_NUMBER, "28"s },
+		});
+}
+
 #if 0 // whitespace support
 // TODO: this test should pass OK.
-TEST_CASE("Can parse one operator after whitespace", "[CalcLexer]") {
+TEST_CASE("Can read one operator after whitespace", "[CalcLexer]") {
 	REQUIRE(Tokenize("  +"sv) == TokenList{
 		Token{ TT_PLUS },
 		});
