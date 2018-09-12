@@ -89,6 +89,16 @@ Token CalcLexer::ReadNumber(char head)
 		value += m_sources[m_position];
 		++m_position;
 	}
+	if (m_position < m_sources.size() && m_sources[m_position] == '.')
+	{
+		value += m_sources[m_position];
+		++m_position;
+		while (m_position < m_sources.size() && IsDigit(m_sources[m_position]))
+		{
+			value += m_sources[m_position];
+			++m_position;
+		}
+	}
 
 	return Token{ TT_NUMBER, value };
 }

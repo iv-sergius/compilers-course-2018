@@ -84,7 +84,7 @@ TEST_CASE("Can read expression tokens", "[CalcLexer]") {
 		Token{ TT_PLUS },
 		Token{ TT_NUMBER, "28"s },
 		});
-#if 0 // fractional number support
+#if 1 // fractional number support
 	REQUIRE(Tokenize("5+7.005"sv) == TokenList{
 		Token{ TT_NUMBER, "5" },
 		Token{ TT_PLUS },
