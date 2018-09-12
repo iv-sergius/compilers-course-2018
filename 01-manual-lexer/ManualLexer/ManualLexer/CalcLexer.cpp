@@ -26,6 +26,21 @@ bool IsDigit(char ch)
 		return false;
 	}
 }
+bool IsSpace(char ch)
+{
+	/*
+	 * Returns true if given character is space.
+	 */
+	switch (ch)
+	{
+	case ' ':
+	case '\t':
+	case '\n':
+		return true;
+	default:
+		return false;
+	}
+}
 }
 
 CalcLexer::CalcLexer(std::string_view sources)
@@ -72,6 +87,10 @@ Token CalcLexer::Read()
 void CalcLexer::SkipSpaces()
 {
 	// TODO: skip whitespace characters - at least ' ', '\t' and '\n'.
+	while (m_position < m_sources.size() && IsSpace(m_sources[m_position]))
+	{
+		++m_position;
+	}
 }
 
 Token CalcLexer::ReadNumber(char head)

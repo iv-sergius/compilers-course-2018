@@ -100,7 +100,7 @@ TEST_CASE("Can read expression tokens", "[CalcLexer]") {
 #endif
 }
 
-#if 0 // whitespace support
+#if 1 // whitespace support
 TEST_CASE("Can read one operator with whitespaces", "[CalcLexer]") {
 	REQUIRE(Tokenize("  +"sv) == TokenList{
 		Token{ TT_PLUS },
