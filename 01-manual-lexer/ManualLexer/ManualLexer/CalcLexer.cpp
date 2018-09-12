@@ -102,7 +102,11 @@ Token CalcLexer::ReadNumber(char head)
 	 */
 	std::string value;
 	value += head;
+	bool wasError = false;
 
+	if (head == '0' && m_position < m_sources.size() && IsDigit(m_sources[m_position])) {
+		wasError = true;
+	}
 	while (m_position < m_sources.size() && IsDigit(m_sources[m_position]))
 	{
 		value += m_sources[m_position];
@@ -117,9 +121,28 @@ Token CalcLexer::ReadNumber(char head)
 			value += m_sources[m_position];
 			++m_position;
 		}
+		if (m_position < m_sources.size() && m_sources[m_position] == '.')
+		{
+			wasError = true;
+			// read til end
+			while (m_position < m_sources.size() && (IsDigit(m_sources[m_position]) || m_sources[m_position] == '.'))
+			{
+				value += m_sources[m_position];
+				++m_position;
+			}
+		}
 	}
-
-	return Token{ TT_NUMBER, value };
+	if (value[value.length() - 1] == '.') {
+		wasError = true;
+	}
+	if (wasError)
+	{
+		return Token{ TT_ERROR, value };
+	}
+	else
+	{
+		return Token{ TT_NUMBER, value };
+	}
 }
 
 }

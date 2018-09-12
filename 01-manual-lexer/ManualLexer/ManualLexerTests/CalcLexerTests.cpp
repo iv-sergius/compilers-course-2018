@@ -97,6 +97,15 @@ TEST_CASE("Can read expression tokens", "[CalcLexer]") {
 		Token{ TT_PLUS },
 		Token{ TT_NUMBER, "1" },
 		});
+	REQUIRE(Tokenize("5."sv) == TokenList{
+		Token{ TT_ERROR, "5." },
+		});
+	REQUIRE(Tokenize("5..0"sv) == TokenList{
+		Token{ TT_ERROR, "5..0" },
+		});
+	REQUIRE(Tokenize("5.00.0"sv) == TokenList{
+		Token{ TT_ERROR, "5.00.0" },
+		});
 #endif
 }
 
@@ -142,6 +151,21 @@ TEST_CASE("Can read one operator with whitespaces", "[CalcLexer]") {
 		Token{ TT_PLUS },
 		});
 }
+TEST_CASE("Error on number with 0 on first position", "[CalcLexer]") {
+	REQUIRE(Tokenize("00") == TokenList{
+		Token{ TT_ERROR, "00" },
+		});
+	REQUIRE(Tokenize("0") == TokenList{
+		Token{ TT_NUMBER, "0" },
+		});
+	REQUIRE(Tokenize("05") == TokenList{
+		Token{ TT_ERROR, "05" },
+		});
+	REQUIRE(Tokenize("0.123") == TokenList{
+		Token{ TT_NUMBER, "0.123" },
+		});
+}
+
 
 TEST_CASE("Can read one number with whitespaces", "[CalcLexer]") {
 	REQUIRE(Tokenize("  1"sv) == TokenList{
