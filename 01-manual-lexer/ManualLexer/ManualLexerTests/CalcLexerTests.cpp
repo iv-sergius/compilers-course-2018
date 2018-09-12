@@ -245,34 +245,34 @@ TEST_CASE("Can read expression tokens with whitespaces") {
 }
 #endif
 
-#if 0 
+#if 1 
 TEST_CASE("Cannot read number which starts with zero") {
 	REQUIRE(Tokenize("0123456789"sv) == TokenList{
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "0123456789"s },
 		});
 	REQUIRE(Tokenize("01.25"sv) == TokenList{
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "01.25"s },
 		});
 	REQUIRE(Tokenize("+01"sv) == TokenList{
 		Token{ TT_PLUS },
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "01"s },
 		});
 	REQUIRE(Tokenize("+00.32"sv) == TokenList{
 		Token{ TT_PLUS },
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "00.32"s },
 		});
 	REQUIRE(Tokenize("4+0521"sv) == TokenList{
 		Token{ TT_NUMBER, "4" },
 		Token{ TT_PLUS },
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "0521"s },
 		});
 	REQUIRE(Tokenize("02+21"sv) == TokenList{
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "02"s },
 		Token{ TT_PLUS },
 		Token{ TT_NUMBER, "21" },
 		});
 	REQUIRE(Tokenize("02.4+5.3"sv) == TokenList{
-		Token{ TT_ERROR },
+		Token{ TT_ERROR, "02.4"s },
 		Token{ TT_PLUS },
 		Token{ TT_NUMBER, "5.3" },
 		});
