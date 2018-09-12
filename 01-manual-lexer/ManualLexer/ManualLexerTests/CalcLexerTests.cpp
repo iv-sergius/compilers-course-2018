@@ -74,6 +74,24 @@ TEST_CASE("Can read one operator", "[CalcLexer]") {
 	REQUIRE(Tokenize("+"sv) == TokenList{
 		Token{ TT_PLUS },
 		});
+	REQUIRE(Tokenize("-"sv) == TokenList{
+		Token{ TT_MINUS },
+		});
+	REQUIRE(Tokenize("*"sv) == TokenList{
+		Token{ TT_MULTIPLICATION },
+		});
+	REQUIRE(Tokenize("/"sv) == TokenList{
+		Token{ TT_DIVISION },
+		});
+}
+
+TEST_CASE("Can read one bracket", "[CalcLexer]") {
+	REQUIRE(Tokenize("("sv) == TokenList{
+		Token{ TT_OPEN_BRACKET },
+		});
+	REQUIRE(Tokenize(")"sv) == TokenList{
+		Token{ TT_CLOSE_BRACKET },
+		});
 }
 
 TEST_CASE("Can read expression tokens", "[CalcLexer]") {

@@ -72,6 +72,16 @@ Token CalcLexer::Read()
 	{
 	case '+':
 		return Token{ TT_PLUS };
+	case '-':
+		return Token{ TT_MINUS };
+	case '*':
+		return Token{ TT_MULTIPLICATION };
+	case '/':
+		return Token{ TT_DIVISION };
+	case '(':
+		return Token{ TT_OPEN_BRACKET };
+	case ')':
+		return Token{ TT_CLOSE_BRACKET };
 	default:
 		break;
 	}
