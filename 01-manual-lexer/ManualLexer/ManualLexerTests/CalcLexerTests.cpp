@@ -157,7 +157,7 @@ TEST_CASE("Can read one number with whitespaces", "[CalcLexer]") {
 		Token{ TT_NUMBER, "9" },
 		});
 	REQUIRE(Tokenize("   \n  15"sv) == TokenList{
-		Token{ TT_NUMBER, 15 },
+		Token{ TT_NUMBER, "15" },
 		});
 	REQUIRE(Tokenize("\t   \n  21.03"sv) == TokenList{
 		Token{ TT_NUMBER, "21.03" },
