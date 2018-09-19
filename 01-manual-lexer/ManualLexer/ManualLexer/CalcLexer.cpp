@@ -46,7 +46,7 @@ bool IsChar(char ch)
 	/* 
 	 * Returns true if given character is char a-z || A-Z || _
 	 */
-	return (ch >= 'a' && ch < 'z') && (ch >= 'A' && ch < 'Z') && ch == '_';
+	return (ch >= 'a' && ch < 'z') || (ch >= 'A' && ch < 'Z') || ch == '_';
 }
 }
 
@@ -82,9 +82,11 @@ Token CalcLexer::Read()
 	case '-':
 		return Token{ TT_MINUS };
 	case '*':
-		return Token{ TT_MULTIPLICATION };
+		return Token{ TT_ASTERISK };
 	case '/':
-		return Token{ TT_DIVISION };
+		return Token{ TT_SLASH };
+	case '=':
+		return Token{ TT_EQUAL };
 	case '(':
 		return Token{ TT_OPEN_BRACKET };
 	case ')':

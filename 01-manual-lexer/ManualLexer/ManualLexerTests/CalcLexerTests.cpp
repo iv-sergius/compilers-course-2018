@@ -78,10 +78,10 @@ TEST_CASE("Can read one operator", "[CalcLexer]") {
 		Token{ TT_MINUS },
 		});
 	REQUIRE(Tokenize("*"sv) == TokenList{
-		Token{ TT_MULTIPLICATION },
+		Token{ TT_ASTERISK },
 		});
 	REQUIRE(Tokenize("/"sv) == TokenList{
-		Token{ TT_DIVISION },
+		Token{ TT_SLASH },
 		});
 }
 
@@ -91,6 +91,33 @@ TEST_CASE("Can read one bracket", "[CalcLexer]") {
 		});
 	REQUIRE(Tokenize(")"sv) == TokenList{
 		Token{ TT_CLOSE_BRACKET },
+		});
+}
+
+TEST_CASE("Can read one id", "[CalcLexer]") {
+	REQUIRE(Tokenize("a"sv) == TokenList{
+		Token{ TT_ID, "a"s },
+		});
+	REQUIRE(Tokenize("A"sv) == TokenList{
+		Token{ TT_ID, "A"s },
+		});
+	REQUIRE(Tokenize("_"sv) == TokenList{
+		Token{ TT_ID, "_"s },
+		});
+	REQUIRE(Tokenize("a12"sv) == TokenList{
+		Token{ TT_ID, "a12"s },
+		});
+	REQUIRE(Tokenize("A_1_b"sv) == TokenList{
+		Token{ TT_ID, "A_1_b"s },
+		});
+	REQUIRE(Tokenize("_1B"sv) == TokenList{
+		Token{ TT_ID, "_1B"s },
+		});
+}
+
+TEST_CASE("Can read one equal", "[CalcLexer]") {
+	REQUIRE(Tokenize("="sv) == TokenList{
+		Token{ TT_EQUAL },
 		});
 }
 
@@ -242,6 +269,7 @@ TEST_CASE("Can read expression tokens with whitespaces") {
 		Token{ TT_PLUS },
 		Token{ TT_NUMBER, "7.1" },
 		});
+
 }
 #endif
 
@@ -278,3 +306,22 @@ TEST_CASE("Cannot read number which starts with zero") {
 		});
 }
 #endif
+
+TEST_CASE("Can read statment with whitespaces", "[CalcLexer]") {
+	REQUIRE(Tokenize("a = 1"sv) == TokenList{
+		Token{ TT_ID, "a"s},
+		Token{ TT_EQUAL },
+		Token{ TT_NUMBER, "1"s}
+		});
+	REQUIRE(Tokenize(" var=7* (1 + 6)"sv) == TokenList{
+		Token{ TT_ID, "var"s},
+		Token{ TT_EQUAL },
+		Token{ TT_NUMBER, "7"s},
+		Token{ TT_ASTERISK },
+		Token{ TT_OPEN_BRACKET },
+		Token{ TT_NUMBER, "1"s},
+		Token{ TT_PLUS },
+		Token{ TT_NUMBER, "6"s },
+		Token{ TT_CLOSE_BRACKET },
+		});
+}
