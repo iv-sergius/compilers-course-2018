@@ -22,8 +22,22 @@ string_view GetTokenName(TokenType type)
 		return "error";
 	case calc::TT_NUMBER:
 		return "number";
+	case calc::TT_ID:
+		return "id";
 	case calc::TT_PLUS:
 		return "+";
+	case calc::TT_MINUS:
+		return "-";
+	case calc::TT_ASTERISK:
+		return "*";
+	case calc::TT_SLASH:
+		return "/";
+	case calc::TT_EQUAL:
+		return "=";
+	case calc::TT_OPEN_BRACKET:
+		return "(";
+	case calc::TT_CLOSE_BRACKET:
+		return ")";
 	}
 	return "<UNEXPECTED!!!>";
 }
@@ -113,6 +127,9 @@ TEST_CASE("Can read one id", "[CalcLexer]") {
 	REQUIRE(Tokenize("_1B"sv) == TokenList{
 		Token{ TT_ID, "_1B"s },
 		});
+	REQUIRE(Tokenize("1B_"sv) == TokenList{
+		Token{ TT_ERROR, "1B_"s },
+		});
 }
 
 TEST_CASE("Can read one equal", "[CalcLexer]") {
@@ -145,6 +162,9 @@ TEST_CASE("Can read expression tokens", "[CalcLexer]") {
 	REQUIRE(Tokenize("5."sv) == TokenList{
 		Token{ TT_ERROR, "5." },
 		});
+	REQUIRE(Tokenize(".4"sv) == TokenList{
+		Token{ TT_ERROR, ".4" },
+		});
 	REQUIRE(Tokenize("5..0"sv) == TokenList{
 		Token{ TT_ERROR, "5..0" },
 		});
@@ -154,7 +174,6 @@ TEST_CASE("Can read expression tokens", "[CalcLexer]") {
 #endif
 }
 
-#if 1 // whitespace support
 TEST_CASE("Can read one operator with whitespaces", "[CalcLexer]") {
 	REQUIRE(Tokenize("  +"sv) == TokenList{
 		Token{ TT_PLUS },
@@ -271,9 +290,7 @@ TEST_CASE("Can read expression tokens with whitespaces") {
 		});
 
 }
-#endif
 
-#if 1 
 TEST_CASE("Cannot read number which starts with zero") {
 	REQUIRE(Tokenize("0123456789"sv) == TokenList{
 		Token{ TT_ERROR, "0123456789"s },
@@ -305,7 +322,6 @@ TEST_CASE("Cannot read number which starts with zero") {
 		Token{ TT_NUMBER, "5.3" },
 		});
 }
-#endif
 
 TEST_CASE("Can read statment with whitespaces", "[CalcLexer]") {
 	REQUIRE(Tokenize("a = 1"sv) == TokenList{
@@ -323,5 +339,20 @@ TEST_CASE("Can read statment with whitespaces", "[CalcLexer]") {
 		Token{ TT_PLUS },
 		Token{ TT_NUMBER, "6"s },
 		Token{ TT_CLOSE_BRACKET },
+		});	
+	REQUIRE(Tokenize("  k = 4 / (8.ab + .1) - 5abc * 9 "sv) == TokenList{
+		Token{ TT_ID, "k"s},
+		Token{ TT_EQUAL },
+		Token{ TT_NUMBER, "4"s},
+		Token{ TT_SLASH },
+		Token{ TT_OPEN_BRACKET },
+		Token{ TT_ERROR, "8.ab"s},
+		Token{ TT_PLUS },
+		Token{ TT_ERROR, ".1"s },
+		Token{ TT_CLOSE_BRACKET },
+		Token{ TT_MINUS },
+		Token{ TT_ERROR, "5abc"s},
+		Token{ TT_ASTERISK },
+		Token{ TT_NUMBER, "9"s},
 		});
 }

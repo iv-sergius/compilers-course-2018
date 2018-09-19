@@ -95,7 +95,7 @@ Token CalcLexer::Read()
 		break;
 	}
 
-	if (IsDigit(next))
+	if (IsDigit(next) || next == '.')
 	{
 		return ReadNumber(next);
 	}
@@ -127,38 +127,32 @@ Token CalcLexer::ReadNumber(char head)
 	std::string value;
 	value += head;
 	bool wasError = false;
+	bool wasDot = false;
 
-	if (head == '0' && m_position < m_sources.size() && IsDigit(m_sources[m_position])) {
-		wasError = true;
-	}
-	while (m_position < m_sources.size() && IsDigit(m_sources[m_position]))
+	wasError = wasError || head == '.';
+	wasError = wasError || (
+		head == '0'
+		&& m_position < m_sources.size()
+		&& (IsDigit(m_sources[m_position]) || IsChar(m_sources[m_position])));
+
+	while (m_position < m_sources.size() && (IsDigit(m_sources[m_position]) || m_sources[m_position] == '.' || IsChar(m_sources[m_position])))
 	{
-		value += m_sources[m_position];
+		char currentChar = m_sources[m_position];
+		if (!wasError)
+		{
+			wasError = wasError || IsChar(currentChar);
+			wasError = wasError || (currentChar == '.' && (
+				wasDot || 
+				!IsDigit(m_sources[m_position - 1]) || 
+				m_position + 1 >= m_sources.size() || 
+				!IsDigit(m_sources[m_position + 1])
+				));
+		}
+		wasDot = wasDot || currentChar == '.';
+		value += currentChar;
 		++m_position;
 	}
-	if (m_position < m_sources.size() && m_sources[m_position] == '.')
-	{
-		value += m_sources[m_position];
-		++m_position;
-		while (m_position < m_sources.size() && IsDigit(m_sources[m_position]))
-		{
-			value += m_sources[m_position];
-			++m_position;
-		}
-		if (m_position < m_sources.size() && m_sources[m_position] == '.')
-		{
-			wasError = true;
-			// read til end
-			while (m_position < m_sources.size() && (IsDigit(m_sources[m_position]) || m_sources[m_position] == '.'))
-			{
-				value += m_sources[m_position];
-				++m_position;
-			}
-		}
-	}
-	if (value[value.length() - 1] == '.') {
-		wasError = true;
-	}
+	wasError = wasError || value[value.length() - 1] == '.'; // check for dot with last .
 	if (wasError)
 	{
 		return Token{ TT_ERROR, value };
