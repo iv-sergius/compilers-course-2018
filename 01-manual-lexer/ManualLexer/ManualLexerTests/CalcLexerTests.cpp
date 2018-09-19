@@ -169,6 +169,7 @@ TEST_CASE("Can read one operator with whitespaces", "[CalcLexer]") {
 		Token{ TT_PLUS },
 		});
 }
+
 TEST_CASE("Error on number with 0 on first position", "[CalcLexer]") {
 	REQUIRE(Tokenize("00") == TokenList{
 		Token{ TT_ERROR, "00" },
@@ -183,7 +184,6 @@ TEST_CASE("Error on number with 0 on first position", "[CalcLexer]") {
 		Token{ TT_NUMBER, "0.123" },
 		});
 }
-
 
 TEST_CASE("Can read one number with whitespaces", "[CalcLexer]") {
 	REQUIRE(Tokenize("  1"sv) == TokenList{

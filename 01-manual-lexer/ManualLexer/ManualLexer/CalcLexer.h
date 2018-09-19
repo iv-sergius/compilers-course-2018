@@ -16,6 +16,7 @@ public:
 private:
 	void SkipSpaces();
 	Token ReadNumber(char head);
+	Token ReadId(char head);
 
 	std::string_view m_sources;
 	size_t m_position = 0;

@@ -41,6 +41,13 @@ bool IsSpace(char ch)
 		return false;
 	}
 }
+bool IsChar(char ch)
+{
+	/* 
+	 * Returns true if given character is char a-z || A-Z || _
+	 */
+	return (ch >= 'a' && ch < 'z') && (ch >= 'A' && ch < 'Z') && ch == '_';
+}
 }
 
 CalcLexer::CalcLexer(std::string_view sources)
@@ -90,6 +97,11 @@ Token CalcLexer::Read()
 	{
 		return ReadNumber(next);
 	}
+	
+	if (IsChar(next))
+	{
+		return ReadId(next);
+	}
 
 	return Token{ TT_ERROR };
 }
@@ -107,7 +119,7 @@ Token CalcLexer::ReadNumber(char head)
 {
 	/*
 	 * Reads the tail of number token and returns this token.
-	 * PRECONDITION: first character already read.
+	 * PRECONDITION: first character already read and it's a number.
 	 * POSTCONDITION: all number characters have been read.
 	 */
 	std::string value;
@@ -153,6 +165,23 @@ Token CalcLexer::ReadNumber(char head)
 	{
 		return Token{ TT_NUMBER, value };
 	}
+}
+
+Token CalcLexer::ReadId(char head)
+{
+	/*
+	 * Reads the tail of id token and returns this token.
+	 * PRECONDITION: first character already read and it's a char.
+	 * POSTCONDITION: all number characters have been read.
+	 */
+	std::string value;
+	value += head;
+	while (m_position < m_sources.length() && (IsChar(m_sources[m_position]) || IsDigit(m_sources[m_position])))
+	{
+		value += m_sources[m_position];
+		++m_position;
+	}
+	return Token{ TT_ID, value };
 }
 
 }

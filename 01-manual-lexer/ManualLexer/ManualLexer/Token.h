@@ -11,6 +11,7 @@ enum TokenType
 	TT_END = 0,
 	TT_ERROR,
 	TT_NUMBER,
+	TT_ID,
 	TT_PLUS,
 	TT_MINUS,
 	TT_MULTIPLICATION,
