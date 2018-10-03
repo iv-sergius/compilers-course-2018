@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <optional>
+#include <boost/optional.hpp>
 
 namespace calc
 {
@@ -9,7 +9,7 @@ namespace calc
 enum TokenType
 {
 	TT_END = 0,
-	TT_ERROR,
+	TT_ERROR = 1,
 	TT_NUMBER,
 	TT_ID,
 	TT_PLUS,
@@ -24,7 +24,30 @@ enum TokenType
 struct Token
 {
 	TokenType type = TT_END;
-	std::optional<std::string> value;
+	boost::optional<std::string> value;
+	
+	Token(TokenType type, std::string str)
+		:type(type), value(str)
+	{}
+	Token(size_t number, std::string str)
+	{
+		if (number > 0 && number <= TokenType::TT_CLOSE_BRACKET)
+		{
+			type = static_cast<TokenType>(number);
+		}
+		else
+		{
+			type = TT_ERROR;
+		}
+		if (type == TT_NUMBER || type == TT_ID || type == TT_ERROR)
+		{
+			value = str;
+		}
+	}
+	Token(TokenType type)
+		:type(type), value()
+	{}
 };
+
 
 }

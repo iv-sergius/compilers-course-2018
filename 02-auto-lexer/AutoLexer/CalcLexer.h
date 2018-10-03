@@ -1,6 +1,8 @@
 #pragma once
 
-#include <string_view>
+#include <boost/utility/string_view.hpp>
+#include <lexertl/generator.hpp>
+#include <lexertl/iterator.hpp>
 #include "Token.h"
 
 namespace calc
@@ -9,14 +11,13 @@ namespace calc
 class CalcLexer
 {
 public:
-	CalcLexer(std::string_view sources);
+	CalcLexer(const boost::string_view sources);
 
 	Token Read();
 
 private:
-
-	std::string_view m_sources;
-	size_t m_position = 0;
+	std::unique_ptr<lexertl::state_machine> m_autoLexer;
+	lexertl::citerator m_stateIter;
 };
 
 }
